@@ -44,6 +44,13 @@ RUN INSTALL_PKGS="rh-python36 rh-python36-python-devel rh-python36-python-setupt
     rpm -e --nodeps redhat-logos && \
     yum -y clean all --enablerepo='*'
 
+# Install and configure GDAL for GeoDjango
+RUN cd /tmp && wget http://download.osgeo.org/gdal/2.4.0/gdal-2.4.0.tar.gz && \
+    tar zxvf gdal-2.4.0.tar.gz && cd gdal-2.4.0/ && \
+    ./configure --prefix=/usr/ --with-sfcgal=no && \
+    make -j4 && sudo make install && \
+    rm -rf /tmp/gdal-2.4.0
+
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH.
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
